@@ -33,30 +33,7 @@ class Category_model extends CI_Model {
         $result = $row->result_array();
         return $result;
     }
-
-    function authentication($data = array()) {
-        $row = $this->db->query("SELECT COUNT(*) FROM user_account WHERE username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "'");
-        $result = $row->result_array();
-        if (isset($result[0]['COUNT(*)']) && ($result[0]['COUNT(*)'])) {
-            return true;
-        }
-        return false;
-    }
-
-    function delete($id = NULL) {
-        return $this->db->delete('user_account', array('id' => $id));
-    }
-
-    function edit($id = NULL) {
-        $data = array(
-            'title' => $title,
-            'name' => $name,
-            'date' => $date
-        );
-
-        $this->db->where('id', $id);
-        $this->db->update('user_account', $data);
-    }
+    
 
 }
 

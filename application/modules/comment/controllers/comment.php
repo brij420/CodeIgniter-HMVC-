@@ -5,25 +5,6 @@ if (!defined('BASEPATH'))
 
 class Comment extends MX_Controller {
 
-    public function index() {
-
-        $category = array();
-        $subcategory = array();
-        $this->load->model('comment_model');
-        $category = $this->comment_model->get_category();
-        $subcategory = $this->comment_model->get_sub_category();
-
-        for ($i = 0; $i < count($category); $i++) {
-            for ($j = 0; $j < count($subcategory); $j++) {
-                if ($category[$i]['id'] == $subcategory[$j]['cat_id']) {
-                    $category[$i]['subcategory'][] = $subcategory[$j];
-                }
-            }
-        }
-
-        return $this->load->view('category', array('category' => $category));
-    }
-
     public function add_comment() {
 
         $data = array();

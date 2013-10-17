@@ -11,6 +11,7 @@ $(document).ready(function() {
     $('#email_err').text("");
     $('#subject_err').text("");
     $('#description_err').text("");
+    $('#user_liked_list').hide();
 
 
 
@@ -213,6 +214,36 @@ $(document).ready(function() {
             });
             return false;
         }
+        return false;
+
+    });
+
+    $('#likes').click(function(e) {
+        e.preventDefault();
+        $('#user_liked_list').toggle();
+
+        $.ajax({
+            url: get_base_url() + 'index.php/likes/likes_image',
+            type: "POST",
+            dataType: "json",
+            data: {likes: {
+                    photo_id: $('#photo_id').val()
+                }
+            },
+            success: function(data) {
+                // $('#comment_box').resetForm(); // reset form
+
+                if (data.comment.successCode == "000") {
+                    window.location.href = get_base_url() + 'index.php/image/image_info?id=' + $('#photo_id').val();
+                    return false;
+                }
+                if (data.comment.successCode != "000") {
+                    $('#msg').html(data.comment.successMessage);
+                    return false;
+                }
+
+            }
+        });
         return false;
 
     });
