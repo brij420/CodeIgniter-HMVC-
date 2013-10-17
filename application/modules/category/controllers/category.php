@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 class Category extends MX_Controller {
 
     public function index() {
-       
+
         $category = array();
         $subcategory = array();
         $this->load->model('category_model');
@@ -24,23 +24,10 @@ class Category extends MX_Controller {
         return $this->load->view('category', array('category' => $category));
     }
 
-    public function login() {
-        $data = array();
-        $data = $this->input->post('signin', TRUE);
-        if ((!empty($data))) {
-            if (((isset($data['username'])) && (preg_match('/^[a-zA-Z0-9]+[-_,a-zA-Z0-9\s]*$/', $data['username']))) && (isset($data['password']) && (strlen($data['password']) >= 8))) {
-                $this->load->model('category_model');
-                if ($this->category_model->authentication($data)) {
-                    $this->session->set_userdata(array('userinfo' => $this->category_model->get($data)));
-                }
-                echo json_encode(array('signin' => array('successCode' => '000', 'successMessage' => 'user signin successfully!')));
-                exit();
-            } else {
-                echo json_encode(array('signin' => array('successCode' => '001', 'successMessage' => 'Invalid signin credentials!')));
-                exit();
-            }
-        }
-        return $this->load->view('login');
+    public function get_category() {
+
+        $this->load->model('category_model');
+        return $this->category_model->get_category();
     }
 
     public function registration() {

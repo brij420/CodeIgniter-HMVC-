@@ -29,6 +29,21 @@ class Administrator extends MX_Controller {
         return $this->load->view('user_listing', array('user_listing' => $this->administrator_model->get_user_list()));
     }
 
+    public function add_user() {
+        $this->load->model('administrator_model');
+        return $this->load->view('user_listing', array('user_listing' => $this->administrator_model->get_user_list()));
+    }
+
+    public function delete_user() {
+        $this->load->model('administrator_model');
+        return $this->load->view('user_listing', array('user_listing' => $this->administrator_model->get_user_list()));
+    }
+
+    public function edit_user() {
+        $this->load->model('administrator_model');
+        return $this->load->view('user_listing', array('user_listing' => $this->administrator_model->get_user_list()));
+    }
+
     public function logout() {
         $this->session->unset_userdata('admininfo');
         redirect('administrator/index');
@@ -36,5 +51,3 @@ class Administrator extends MX_Controller {
 
 }
 
-/* End of file hmvc.php */
-/* Location: ./application/widgets/hmvc/controllers/hmvc.php */

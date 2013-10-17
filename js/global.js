@@ -9,6 +9,8 @@ $(document).ready(function() {
     $('#lname_err').text("");
     $('#mname_err').text("");
     $('#email_err').text("");
+    $('#subject_err').text("");
+    $('#description_err').text("");
 
 
 
@@ -117,7 +119,7 @@ $(document).ready(function() {
                     }
                 },
                 success: function(data) {
-                   
+
 
                     if (data.signin.successCode == "000") {
                         window.location.href = get_base_url() + 'index.php/user/index';
@@ -161,6 +163,49 @@ $(document).ready(function() {
                     }
                     if (data.forgotPassword.successCode != "000") {
                         $('#msg').html(data.forgotPassword.successMessage);
+                        return false;
+                    }
+
+                }
+            });
+            return false;
+        }
+        return false;
+
+    });
+
+    $('#comment_box').submit(function(e) {
+        e.preventDefault();
+        if ($('#subject').val() == '')
+            $('#subject_err').text("Please enter subject field!");
+        else
+            $('#subject_err').text("");
+
+        if ($('#description').val() == '')
+            $('#description_err').text("Please enter description field!");
+        else
+            $('#description_err').text("");
+
+        if (($('#subject').val() != '') && ($('#description').val() != '')) {
+            $.ajax({
+                url: get_base_url() + 'index.php/comment/add_comment',
+                type: "POST",
+                dataType: "json",
+                data: {comment: {
+                        subject: $('#subject').val(),
+                        description: $('#description').val(),
+                        photo_id: $('#photo_id').val()
+                    }
+                },
+                success: function(data) {
+                    // $('#comment_box').resetForm(); // reset form
+
+                    if (data.comment.successCode == "000") {
+                        window.location.href = get_base_url() + 'index.php/image/image_info?id=' + $('#photo_id').val();
+                        return false;
+                    }
+                    if (data.comment.successCode != "000") {
+                        $('#msg').html(data.comment.successMessage);
                         return false;
                     }
 
