@@ -176,6 +176,7 @@ $(document).ready(function() {
     });
 
     $('#comment_box').submit(function(e) {
+        is_user_signin();
         e.preventDefault();
         if ($('#subject').val() == '')
             $('#subject_err').text("Please enter subject field!");
@@ -219,6 +220,7 @@ $(document).ready(function() {
     });
 
     $('#likes').click(function(e) {
+        is_user_signin();
         e.preventDefault();
         $('#user_liked_list').toggle();
 
@@ -277,3 +279,21 @@ function isEmail(str) {
     }
 }
 
+function is_user_signin() {
+    $(document).ready(function() {
+        $.ajax({
+            url: get_base_url() + 'index.php/user/is_signin',
+            type: "POST",
+            dataType: "json",
+            success: function(data) {
+                if (data.isSignin.successCode != "000") {
+                    alert(data.isSignin.successMessage);
+                    window.location.href = get_base_url() + 'index.php/user/login';
+                    return false;
+                }
+
+            }
+        });
+    });
+
+}

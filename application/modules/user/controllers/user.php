@@ -11,6 +11,11 @@ class User extends MX_Controller {
     }
 
     public function login() {
+        $userinfo = array();
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && ($userinfo['id'])) {
+            redirect('user/index');
+        }
         $data = array();
         $data = $this->input->post('signin', TRUE);
         if ((!empty($data))) {
@@ -45,6 +50,17 @@ class User extends MX_Controller {
             }
         }
         return $this->load->view('registration');
+    }
+
+    public function is_signin() {
+        $userinfo = array();
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && ($userinfo['id'])) {
+            echo json_encode(array('isSignin' => array('successCode' => '000', 'successMessage' => 'you are logged-in!')));
+            exit();
+        }
+        echo json_encode(array('isSignin' => array('successCode' => '001', 'successMessage' => 'Please logged-in first!')));
+        exit();
     }
 
     public function logout() {
