@@ -27,7 +27,7 @@ echo Modules::run('template/leftsidepanel');
             <label>Middle Name</label>
             <input type="text" value="" id="mname" name="mname" class="input-xlarge"><br/><span class="err" id="mname_err"></span>
             <label>Gender</label>
-            <input type="radio" name="gender"  value="male" class="input-xlarge" checked> male
+            <input type="radio" name="gender"  value="male" class="input-xlarge" checked="checked"> male
             <input type="radio" name="gender" class="input-xlarge" value="female"> female<br><br>
             <label>Email</label>
             <input type="text" value="" id="email" name="email" class="input-xlarge"><br/><span class="err" id="email_err"></span>

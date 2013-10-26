@@ -1,10 +1,10 @@
-<?php echo Modules::run('template/admin_header',array('admin'=>'current')); ?>
+<?php echo Modules::run('template/admin_header',array('subcategory'=>'current')); ?>
 <!-- start content -->
 <div id="content">
 
     <!--  start page-heading -->
     <div id="page-heading">
-        <h1>List of User's</h1>
+        <h1>Sub-Category List</h1>
     </div>
     <!-- end page-heading -->
 
@@ -32,35 +32,24 @@
                             <table border="0" width="100%" cellpadding="0" cellspacing="0" id="product-table">
                                 <tr>
 
-                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Last Name</a>	</th>
-                                    <th class="table-header-repeat line-left minwidth-1"><a href="">First Name</a></th>
-                                    <th class="table-header-repeat line-left"><a href="">Email</a></th>
-                                    <th class="table-header-repeat line-left"><a href="">User Type</a></th>
-                                    <th class="table-header-repeat line-left"><a href="">Status</a></th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">S.No.</a>	</th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Category Name</a></th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Sub-category Name</a></th>
+                                    <th class="table-header-repeat line-left"><a href="">Date</a></th>
                                     <th class="table-header-options line-left"><a href="">Options</a></th>
                                 </tr>
-                                <?php for ($i = 0; $i < count($user_listing); $i++) { ?>
+                                <?php for ($i = 0; $i < count($subcategory_listing); $i++) { ?>
                                     <tr>
 
-                                        <td><?php echo $user_listing[$i]['lname']; ?></td>
-                                        <td><?php echo $user_listing[$i]['fname']; ?></td>
-                                        <td><a href=""><?php echo $user_listing[$i]['email']; ?></a></td>
-                                        <td><?php
-                                            if (isset($user_listing[$i]['is_admin']) && ($user_listing[$i]['is_admin']))
-                                                echo 'admin';
-                                            else
-                                                echo 'user'
-                                                ?></td>
-                                        <td><a href=""><?php
-                                                if (isset($user_listing[$i]['is_active']) && ($user_listing[$i]['is_active']))
-                                                    echo 'active';
-                                                else
-                                                    echo 'inactive'
-                                                    ?></a></td>
+                                        <td><?php echo $i + 1; ?></td>
+                                        <td><?php echo $subcategory_listing[$i]['category_name']; ?></td>
+                                        <td><?php echo $subcategory_listing[$i]['subcategory_name']; ?></td>
+                                        <td><a href=""><?php echo date('Y-m-d', $subcategory_listing[$i]['date']); ?></a></td>
+
                                         <td class="options-width">
-                                            <a href="administrator/add_user" title="Add" class="icon-1 info-tooltip"></a>
-                                            <a href="administrator/edit_user?id=<?php echo $user_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
-                                            <a href="administrator/delete_user?id=<?php echo $user_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                                        
+                                             <a href="<?php echo base_url();?>index.php/category/add_subcategory" title="Add" class="icon-1 info-tooltip"></a>
+                                            <a href="<?php echo base_url();?>index.php/category/edit_subcategory?id=<?php echo $subcategory_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
+                                            <a href="<?php echo base_url();?>index.php/category/delete_subcategory?id=<?php echo $subcategory_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                              
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -111,4 +100,5 @@
     <div class="clear">&nbsp;</div>
 
 </div>
+<!--  end content -->
 <?php echo Modules::run('template/admin_footer'); ?>

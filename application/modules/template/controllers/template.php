@@ -5,7 +5,7 @@ if (!defined('BASEPATH'))
 
 class Template extends MX_Controller {
 
-    public function index($data = NULL) {       
+    public function index($data = NULL) {
         return $this->load->view('header', $data);
     }
 
@@ -21,6 +21,12 @@ class Template extends MX_Controller {
         return $this->load->view('footer', $data);
     }
 
-   
+    public function admin_header($data = NULL) {
+        return $this->load->view('administrator_header', $data);
+    }
+
+    public function admin_footer($data = NULL) {
+        return $this->load->view('admin_footer', $data);
+    }
 
 }

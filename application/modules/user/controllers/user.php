@@ -41,9 +41,14 @@ class User extends MX_Controller {
         if ((!empty($data))) {
             if (((isset($data['username'])) && (preg_match('/^[a-zA-Z0-9]+[-_,a-zA-Z0-9\s]*$/', $data['username']))) && ((isset($data['fname'])) && (preg_match('/^[a-zA-Z0-9]+[-_,a-zA-Z0-9\s]*$/', $data['fname']))) && ((isset($data['lname'])) && (preg_match('/^[a-zA-Z0-9]+[-_,a-zA-Z0-9\s]*$/', $data['lname']))) && (isset($data['password']) && (strlen($data['password']) >= 8)) && ((isset($data['email'])) && (preg_match('/^([a-z0-9][-a-z0-9_\+\.]*[a-z0-9])@([a-z0-9][-a-z0-9\.]*[a-z0-9]\.(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\.{3}[0-9]{1,3}))$/', $data['email'])))) {
                 $this->load->model('user_model');
-                $this->user_model->save($data);
-                echo json_encode(array('addUser' => array('successCode' => '000', 'successMessage' => 'user register successfully!')));
-                exit();
+                if ($this->user_model->duplicate_account_check($data)) {
+                    $this->user_model->save($data);
+                    echo json_encode(array('addUser' => array('successCode' => '000', 'successMessage' => 'user register successfully!')));
+                    exit();
+                } else {
+                    echo json_encode(array('addUser' => array('successCode' => '999', 'successMessage' => 'user already has been registered or please choose different email and username!')));
+                    exit();
+                }
             } else {
                 echo json_encode(array('addUser' => array('successCode' => '001', 'successMessage' => 'registration fail, please try again!')));
                 exit();
@@ -74,7 +79,8 @@ class User extends MX_Controller {
         if ((!empty($data))) {
             if ((isset($data['email'])) && (preg_match('/^([a-z0-9][-a-z0-9_\+\.]*[a-z0-9])@([a-z0-9][-a-z0-9\.]*[a-z0-9]\.(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\.{3}[0-9]{1,3}))$/', $data['email']))) {
                 $this->load->model('user_model');
-                $this->user_model->save($data);
+                $data['unique_string'] = rand(1, 999);
+                $this->user_model->edit($data);
 
                 $this->load->library('email');
 
@@ -84,22 +90,36 @@ class User extends MX_Controller {
                 //$this->email->bcc('them@their-example.com');
 
                 $this->email->subject('Forgot Password');
-                $this->email->message('Testing the email for Forgot Password.');
+                $this->email->message('Testing the email for Forgot Password.Please click <a href="' . base_url() . 'index.php/user/reset_password?link=' . $data['unique_string'] . '">here</a> ');
 
                 $this->email->send();
 
-                echo json_encode(array('forgotPassword' => array('successCode' => '000', 'successMessage' => 'user register successfully!')));
+                echo json_encode(array('forgotPassword' => array('successCode' => '000', 'successMessage' => 'password request has been sent on your email successfully!')));
                 exit();
             } else {
-                echo json_encode(array('forgotPassword' => array('successCode' => '001', 'successMessage' => 'registration fail, please try again!')));
+                echo json_encode(array('forgotPassword' => array('successCode' => '001', 'successMessage' => 'problem in sending email, please try again!')));
                 exit();
             }
         }
         return $this->load->view('forgotpassword');
     }
 
-    public function passwordreset() {
-        return $this->load->view('hmvc_view');
+    public function reset_password() {
+        $data = array();
+        $data = $this->input->post('reset_password', TRUE);
+        if ((!empty($data))) {
+            if ((isset($data['password'])) && ($data['password']) && (isset($data['link'])) && ($data['link'])) {
+                $this->load->model('user_model');
+                $this->user_model->reset_password($data);
+
+                echo json_encode(array('resetPassword' => array('successCode' => '000', 'successMessage' => 'password has been reset successfully!')));
+                exit();
+            } else {
+                echo json_encode(array('resetPassword' => array('successCode' => '001', 'successMessage' => 'problem in resetting password, please try again!')));
+                exit();
+            }
+        }
+        return $this->load->view('reset_password', array('link' => $this->input->get('link', TRUE)));
     }
 
 }
