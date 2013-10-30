@@ -40,7 +40,7 @@ class Category_model extends CI_Model {
     function get_subcategory_by_id($id = NULL) {
         $row = $this->db->query("SELECT * FROM sub_categories WHERE id='" . $id . "'");
         $result = $row->result_array();
-        return isset($result[0])&&($result[0])?$result[0]:NULL;
+        return isset($result[0]) && ($result[0]) ? $result[0] : NULL;
     }
 
     function get_sub_category() {
@@ -74,6 +74,7 @@ class Category_model extends CI_Model {
     }
 
     function delete($id = NULL) {
+        $this->db->delete('sub_categories', array('cat_id' => $id));
         return $this->db->delete('categories', array('id' => $id));
     }
 

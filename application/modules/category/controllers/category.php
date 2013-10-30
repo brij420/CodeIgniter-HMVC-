@@ -110,7 +110,7 @@ class Category extends MX_Controller {
                 $this->load->model('category_model');
                 if ($this->category_model->duplicate_subcategory_check($data)) {
                     $this->category_model->save_subcategory($data);
-                    echo json_encode(array('addSubCategory' => array('successCode' => '000', 'successMessage' => 'user added successfully!')));
+                    echo json_encode(array('addSubCategory' => array('successCode' => '000', 'successMessage' => 'subcategory added successfully!')));
                     exit();
                 } else {
                     echo json_encode(array('addSubCategory' => array('successCode' => '999', 'successMessage' => 'subcategory already existed!')));

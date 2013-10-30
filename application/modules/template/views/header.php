@@ -8,6 +8,7 @@
 
             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-1.9.1.min.js"></script>
             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.simpleSlider.js"></script>
+            <script type="text/javascript" src="<?php echo base_url(); ?>js/ajaxupload.3.5.js"></script>
 
 
             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.jcarousel.min.js"></script>

@@ -16,7 +16,7 @@ $(document).ready(function() {
     $('#subcategory_err').text("");
     $('#select_category_err').text("");
     category_list();
-
+   file_upload();
 
     $('#registration').submit(function(e) {
         e.preventDefault();
@@ -59,6 +59,7 @@ $(document).ready(function() {
 
 //alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
         if ((isAlphanumericCharachter($('#username').val())) && (isAlphanumericCharachter($('#fname').val())) && (isAlphanumericCharachter($('#lname').val()) && (isEmail($('#email').val()))) && ($('#password').val() == $('#confirm_password').val()) && (($('#password').val()).length >= 8)) {
+          
             $.ajax({
                 url: get_base_url() + 'index.php/user/registration',
                 type: "POST",
@@ -67,15 +68,18 @@ $(document).ready(function() {
                         username: $('#username').val(),
                         fname: $('#fname').val(),
                         lname: $('#lname').val(),
-                        mname: $('#mname').val(),
+                        address: $('#address').val(),
+                        city: $('#city').val(),
+                        country: $('#country').val(),
+                        phone: $('#phone').val(),
                         email: $('#email').val(),
                         password: $('#password').val(),
+                        image_name: $('#image_name').val(),
                         gender: $('input:radio[name=gender]:checked').val()
                     }
                 },
                 success: function(data) {
-                    // $('#registration').resetForm(); // reset form
-
+                   
                     if (data.addUser.successCode == "000") {
                         window.location.href = get_base_url() + 'index.php/user/index';
                         return false;
@@ -101,6 +105,26 @@ $(document).ready(function() {
             $('#username_err').text("Please enter valid username!");
         else
             $('#username_err').text("");
+
+        if (($('#address').val() == ''))
+            $('#address_err').text("Please enter valid address!");
+        else
+            $('#address_err').text("");
+
+        if (($('#city').val() == '') || (!isAlphanumericCharachter($('#city').val())))
+            $('#city_err').text("Please enter valid city name!");
+        else
+            $('#city_err').text("");
+
+        if (($('#country').val() == '') || (!isAlphanumericCharachter($('#country').val())))
+            $('#country_err').text("Please enter valid country name!");
+        else
+            $('#country_err').text("");
+
+        if (($('#phone').val() == '') || (!isNumeric($('#phone').val())))
+            $('#phone_err').text("Please enter valid Phone number!");
+        else
+            $('#phone_err').text("");
 
         if (($('#fname').val() == '') || (!isAlphanumericCharachter($('#fname').val())))
             $('#fname_err').text("Please enter valid first name!");
@@ -141,7 +165,11 @@ $(document).ready(function() {
                         email: $('#email').val(),
                         password: $('#password').val(),
                         is_admin: $('#is_admin').val(),
-                        gender: $('input:radio[name=gender]:checked').val()
+                        gender: $('input:radio[name=gender]:checked').val(),
+                        city: $('#city').val(),
+                        country: $('#country').val(),
+                        phone: $('#phone').val(),
+                        address: $('#address').val()
                     }
                 },
                 success: function(data) {
@@ -413,7 +441,7 @@ $(document).ready(function() {
     });
 
     function category_list() {
-        is_admin_signin();
+        //is_admin_signin();
         $('#select_category').empty();
         $.ajax({
             url: get_base_url() + 'index.php/category/get_parent_category',
@@ -724,6 +752,38 @@ function is_admin_signin() {
 
             }
         });
+    });
+
+}
+
+
+function file_upload() {
+
+    $(function() {
+        var btnUpload = $('#upload');
+        var status = $('#status');
+        new AjaxUpload(btnUpload, {
+            action: get_base_url() + 'index.php/user/upload_file',
+            name: 'uploadfile',
+            onSubmit: function(file, ext) {
+                if (!(ext && /^(jpg|png|jpeg|gif)$/.test(ext))) {
+                    // extension is not allowed 
+                    status.text('Only JPG, PNG or GIF files are allowed');
+                    return false;
+                }
+                status.text('Uploading...');
+            },
+            onComplete: function(file) {
+               
+                if (file!='') {
+                    $('#image_name').val($('#image_name').val()+','+file);
+                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="'+get_base_url() +'uploads/' + file + '" alt="" /><br />').addClass('success');
+                } else {
+                    $('<li></li>').appendTo('#files').text(file).addClass('error');
+                }
+            }
+        });
+
     });
 
 }

@@ -10,21 +10,26 @@ class User_model extends CI_Model {
         $user_data = array(
             'fname' => isset($data['fname']) && ($data['fname']) ? $data['fname'] : '',
             'lname' => isset($data['lname']) && ($data['lname']) ? $data['lname'] : '',
-            'm_name' => isset($data['mname']) && ($data['mname']) ? $data['mname'] : '',
             'username' => isset($data['username']) && ($data['username']) ? $data['username'] : '',
             'email' => isset($data['email']) && ($data['email']) ? $data['email'] : '',
             'gender' => isset($data['gender']) && ($data['gender']) ? $data['gender'] : '',
             'password' => isset($data['password']) && ($data['password']) ? md5($data['password']) : NULL,
+            'address' => isset($data['address']) && ($data['address']) ? $data['address'] : NULL,
+            'city' => isset($data['city']) && ($data['city']) ? $data['city'] : NULL,
+            'country' => isset($data['country']) && ($data['country']) ? $data['country'] : NULL,
+            'phone' => isset($data['phone']) && ($data['phone']) ? $data['phone'] : NULL,
+            'confirmation' => isset($data['confirmation']) && ($data['confirmation']) ? $data['confirmation'] : '',
             'is_admin' => '',
             'create' => time(),
             'image' => '',
         );
 
-        return $this->db->insert('user_account', $user_data);
+        $this->db->insert('user_account', $user_data);
+        return $this->db->insert_id();
     }
 
     function get($data = array()) {
-        $row = $this->db->query("SELECT * FROM user_account WHERE username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "'");
+        $row = $this->db->query("SELECT * FROM user_account WHERE (username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "')||(confirmation='" . $data['link'] . "')");
         $result = $row->result_array();
         return $result[0];
     }
@@ -39,7 +44,7 @@ class User_model extends CI_Model {
     }
 
     function duplicate_account_check($data = array()) {
-        $row = $this->db->query("SELECT COUNT(*) FROM user_account WHERE username='" . $data['username'] . "' AND  email='" . $data['email'] . "'");
+        $row = $this->db->query("SELECT COUNT(*) FROM user_account WHERE username='" . $data['username'] . "'");
         $result = $row->result_array();
         if (isset($result[0]['COUNT(*)']) && ($result[0]['COUNT(*)'])) {
             return false;
@@ -49,6 +54,11 @@ class User_model extends CI_Model {
 
     function delete($id = NULL) {
         return $this->db->delete('user_account', array('id' => $id));
+    }
+
+    function update($data = array(), $condition = array()) {
+        $this->db->where($condition);
+        return $this->db->update('user_account', $data);
     }
 
     function edit($data = NULL) {
