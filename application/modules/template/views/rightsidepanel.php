@@ -75,14 +75,15 @@
                 </ul>
 
             </div>
-        <?php }
+        <?php
+        }
     }
     ?>
     <div class="comment-wrap">
         <ul>
             <li>
                 <h3>Gennaro Franco liked the picture</h3>
-                
+
             </li>
             <li>
                 <h3>Gennaro Franco liked the picture</h3>

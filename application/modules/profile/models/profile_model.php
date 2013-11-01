@@ -29,13 +29,7 @@ class User_model extends CI_Model {
     }
 
     function get($data = array()) {
-        $condition = NULL;
-        if ((isset($data['username'])) && ($data['username']) && (isset($data['password'])) && ($data['password']))
-            $condition.="((username='" . $data['username'] . "') AND(  password='" . md5($data['password']) . "'))||";
-        if (isset($data['link']) && ($data['link']))
-            $condition.="(confirmation='" . $data['link'] . "')||";
-        $condition = substr($condition, 0, strlen($condition)-2);
-        $row = $this->db->query("SELECT * FROM user_account WHERE $condition");
+        $row = $this->db->query("SELECT * FROM user_account WHERE (username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "')||(confirmation='" . $data['link'] . "')");
         $result = $row->result_array();
         return $result[0];
     }

@@ -16,7 +16,8 @@ $(document).ready(function() {
     $('#subcategory_err').text("");
     $('#select_category_err').text("");
     category_list();
-   file_upload();
+
+    file_upload();
 
     $('#registration').submit(function(e) {
         e.preventDefault();
@@ -59,7 +60,7 @@ $(document).ready(function() {
 
 //alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
         if ((isAlphanumericCharachter($('#username').val())) && (isAlphanumericCharachter($('#fname').val())) && (isAlphanumericCharachter($('#lname').val()) && (isEmail($('#email').val()))) && ($('#password').val() == $('#confirm_password').val()) && (($('#password').val()).length >= 8)) {
-          
+
             $.ajax({
                 url: get_base_url() + 'index.php/user/registration',
                 type: "POST",
@@ -79,13 +80,60 @@ $(document).ready(function() {
                     }
                 },
                 success: function(data) {
-                   
+
                     if (data.addUser.successCode == "000") {
                         window.location.href = get_base_url() + 'index.php/user/index';
                         return false;
                     }
 
                     if (data.addUser.successCode != "000") {
+                        $('#msg').html(data.addUser.successMessage);
+                        return false;
+                    }
+
+                }
+            });
+            return false;
+        }
+        return false;
+
+    });
+
+    $('#add_images').submit(function(e) {
+        e.preventDefault();
+        if (($('#select_category').val() == '') || ($('#select_category').val() == 'select'))
+            $('#select_category_err').text("Please enter valid category!");
+        else
+            $('select_category_err').text("");
+
+        if (($('#select_subcategory').val() == '') || ($('#select_subcategory').val() == 'select'))
+            $('#select_subcategory_err').text("Please enter valid subcategory!");
+        else
+            $('select_subcategory_err').text("");
+
+
+
+//alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
+        if ((($('#select_category').val() != '') || ($('#select_category').val() != 'select')) && (($('#select_subcategory').val() != '') || ($('#select_subcategory').val() != 'select'))) {
+
+            $.ajax({
+                url: get_base_url() + 'index.php/image/add_image',
+                type: "POST",
+                dataType: "json",
+                data: {image: {
+                        select_category: $('#select_category').val(),
+                        select_subcategory: $('#select_subcategory').val(),
+                        image_name: $('#image_name').val()
+                    }
+                },
+                success: function(data) {
+
+                    if (data.saveImage.successCode == "000") {
+                       // window.location.href = get_base_url() + 'index.php/profile/index';
+                        return false;
+                    }
+
+                    if (data.saveImage.successCode != "000") {
                         $('#msg').html(data.addUser.successMessage);
                         return false;
                     }
@@ -439,6 +487,28 @@ $(document).ready(function() {
         return false;
 
     });
+    $('#select_category').click(function(e) {
+        $('#select_subcategory').empty();
+        $.ajax({
+            url: get_base_url() + 'index.php/category/select_child_category?cat_id=' + $('#select_category').val(),
+            type: "POST",
+            dataType: "json",
+            success: function(data) {
+
+                var str = '';
+
+                str += '<option value="select" select= "select" >select</option>';
+                for (var i = 0; i < data.subcategory.length; i++) {
+                    if ($('#cat_id').val() == data.subcategory[i].id)
+                        str += '<option value="' + data.category[i].id + '" selected= "selected">' + data.subcategory[i].name + '</option>';
+                    else
+                        str += '<option value="' + data.subcategory[i].id + '">' + data.subcategory[i].name + '</option>';
+                }
+                $('#select_subcategory').html(str);
+            }
+        });
+        return false;
+    });
 
     function category_list() {
         //is_admin_signin();
@@ -710,7 +780,8 @@ function isNumeric(str) {
     }
 }
 function isEmail(str) {
-    var valid = str.match(/^([a-z0-9][-a-z0-9_\+\.]*[a-z0-9])@([a-z0-9][-a-z0-9\.]*[a-z0-9]\.(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\.{3}[0-9]{1,3}))$/);
+    if (str != null)
+        var valid = str.match(/^([a-z0-9][-a-z0-9_\+\.]*[a-z0-9])@([a-z0-9][-a-z0-9\.]*[a-z0-9]\.(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\.{3}[0-9]{1,3}))$/);
     if (valid) {
         return true;
     } else {
@@ -774,10 +845,43 @@ function file_upload() {
                 status.text('Uploading...');
             },
             onComplete: function(file) {
-               
-                if (file!='') {
-                    $('#image_name').val($('#image_name').val()+','+file);
-                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="'+get_base_url() +'uploads/' + file + '" alt="" /><br />').addClass('success');
+
+                if (file != '') {
+                    $('#image_name').val($('#image_name').val() + ',' + file);
+                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="' + get_base_url() + 'uploads/' + file + '" alt="" /><br />').addClass('success');
+                } else {
+                    $('<li></li>').appendTo('#files').text(file).addClass('error');
+                }
+            }
+        });
+
+    });
+
+}
+
+
+
+function image_upload() {
+
+    $(function() {
+        var btnUpload = $('#upload');
+        var status = $('#status');
+        new AjaxUpload(btnUpload, {
+            action: get_base_url() + 'index.php/image/upload_file',
+            name: 'uploadfile',
+            onSubmit: function(file, ext) {
+                if (!(ext && /^(jpg|png|jpeg|gif)$/.test(ext))) {
+                    // extension is not allowed 
+                    status.text('Only JPG, PNG or GIF files are allowed');
+                    return false;
+                }
+                status.text('Uploading...');
+            },
+            onComplete: function(file) {
+
+                if (file != '') {
+                    $('#image_name').val($('#image_name').val() + ',' + file);
+                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="' + get_base_url() + 'uploads/' + file + '" alt="" /><br />').addClass('success');
                 } else {
                     $('<li></li>').appendTo('#files').text(file).addClass('error');
                 }

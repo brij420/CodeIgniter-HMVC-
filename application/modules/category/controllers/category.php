@@ -98,7 +98,17 @@ class Category extends MX_Controller {
         $this->load->model('category_model');
         $id = null;
         $id = $this->category_model->get_subcategory_by_id($this->input->get('id', TRUE));
-        echo json_encode(array('category' => $this->get_category(), 'id' => $id), TRUE);
+        if ($id) {
+            echo json_encode(array('category' => $this->get_category(), 'id' => $id), TRUE);
+        } else {
+            echo json_encode(array('category' => $this->get_category()));
+        }
+        exit();
+    }
+
+    public function select_child_category() {
+        $this->load->model('category_model');
+        echo json_encode(array('subcategory' => $this->category_model->get_sub_category($this->input->get('cat_id', TRUE))));
         exit();
     }
 

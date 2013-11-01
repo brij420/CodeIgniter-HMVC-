@@ -43,8 +43,13 @@ class Category_model extends CI_Model {
         return isset($result[0]) && ($result[0]) ? $result[0] : NULL;
     }
 
-    function get_sub_category() {
-        $row = $this->db->query("SELECT * FROM sub_categories");
+    function get_sub_category($cat_id = NULL) {
+        if ($cat_id) {
+            $row = $this->db->query("SELECT * FROM sub_categories WHERE cat_id='" . $cat_id . "'");
+        } else {
+
+            $row = $this->db->query("SELECT * FROM sub_categories");
+        }
         $result = $row->result_array();
         return $result;
     }

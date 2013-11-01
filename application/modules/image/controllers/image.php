@@ -10,13 +10,33 @@ class Image extends MX_Controller {
         return $this->load->view('images', array('images' => $this->image_model->get_image_list($id)));
     }
 
+    public function get_all_images($id = 1) {
+        $userinfo = array();
+        $this->load->model('image_model');
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && ($userinfo['id'])) {
+            return $this->load->view('images', array('images' => $this->image_model->get_image_list($id, $userinfo['id'])));
+        }
+        return false;
+    }
+
+    public function get_images() {
+        $userinfo = array();
+        $this->load->model('image_model');
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && ($userinfo['id'])) {
+            return $this->load->view('profile_images', array('images' => $this->image_model->get_images($userinfo['id'])));
+        }
+        return false;
+    }
+
     public function save_profile_images($images = NULL, $user_id = NULL) {
         $data = explode(',', $images);
         $this->load->model('image_model');
         $data = array_unique($data);
-        for ($i = 0; $i < count($data); $i++){
-            if(isset($data[$i])&&($data[$i]))
-            $this->image_model->save($data[$i], $user_id);
+        for ($i = 0; $i < count($data); $i++) {
+            if (isset($data[$i]) && ($data[$i]))
+                $this->image_model->save($data[$i], $user_id);
         }
         return $data[0];
         //return $this->load->view('images', array('images' => $this->image_model->get_image_list($id)));
@@ -31,6 +51,43 @@ class Image extends MX_Controller {
         $id = $this->input->get('id', TRUE);
         $this->load->model('image_model');
         return $this->load->view('image_info', array('image_info' => $this->image_model->get_image_details($id)));
+    }
+
+    public function add_image() {
+        $data = array();
+        $data = $this->input->post('image', TRUE);
+        $this->load->model('image_model');
+        if ((!empty($data))) {
+            $data['image'] = explode(',', $data['image_name']);
+            $data['image'] = array_unique($data['image']);
+            $userinfo = array();
+            $userinfo = $this->session->userdata('userinfo');
+            if (isset($userinfo['id']) && ($userinfo['id'])) {
+                $data['user_id'] = $userinfo['id'];
+            }
+            for ($i = 0; $i < count($data['image']); $i++) {
+                if (isset($data['image'][$i]) && ($data['image'][$i]))
+                    $this->image_model->save_image($data['image'][$i], $data);
+            }
+            echo json_encode(array('saveImage' => array('successCode' => '000', 'successMessage' => 'image has been added successfully!')));
+            exit();
+        }
+
+        echo json_encode(array('saveImage' => array('successCode' => '001', 'successMessage' => 'problem in image adding!')));
+        exit();
+    }
+
+    public function upload_file() {
+        $this->load->model('image_model');
+        $uploaddir = './uploads/';
+        $file = $uploaddir . basename($_FILES['uploadfile']['name']);
+
+        if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {
+            echo json_encode(array('fileUpload' => array('successCode' => '000', 'successMessage' => 'file has been uploaded successfully!', 'file' => $_FILES['uploadfile']['name'])));
+            exit();
+        }
+        echo json_encode(array('fileUpload' => array('successCode' => '001', 'successMessage' => 'problem in file uploading!')));
+        exit();
     }
 
 }
