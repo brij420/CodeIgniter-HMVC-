@@ -60,7 +60,9 @@
                                         <td class="options-width">
                                             <a href="administrator/add_user" title="Add" class="icon-1 info-tooltip"></a>
                                             <a href="administrator/edit_user?id=<?php echo $user_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
+                                            <?php  if (isset($user_listing[$i]['is_admin']) && (!$user_listing[$i]['is_admin'])){?>
                                             <a href="administrator/delete_user?id=<?php echo $user_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                                        
+                                            <?php }?>
                                         </td>
                                     </tr>
                                 <?php } ?>

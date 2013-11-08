@@ -13,19 +13,19 @@ echo Modules::run('template/profile_leftsidepanel');
 <div class="modal-body" style="max-height:700px;margin-left: 30%;">
     <div class="tab-pane active in" id="create">
         <span id="msg" class="err" ></span>
-        <form id="add_images" method="" action="" enctype="multipart/form-data">
+        <form id="add_images_tournament" method="" action="" enctype="multipart/form-data">
             <table border="0" cellpadding="0" cellspacing="0"  id="id-form">
-               
+
                 <tr> <th valign="top">Upload File</th>
                     <td>
                         <input type="button" id="upload" value="click here to upload image" /><span id="status"></span>
-                        <input type="hidden" id="image_name" name="image_name" value=""/>
+                        <input type="hidden" id="subcategory" name="subcategory" value="<?php if (isset($id) && ($id)) echo $id; ?>"/><input type="hidden" id="category" name="category" value="<?php if (isset($cat_id) && ($cat_id)) echo $cat_id; ?>"/> <input type="hidden" id="image_name" name="image_name" value=""/>
                         <ul id="files" ></ul>
                     </td>
                 </tr>
                 <tr>
-                    <th valign="top"><button class="btn btn-primary" >Add Profile images</button></th>
-                    <td> &nbsp;&nbsp;<button class="btn btn-primary" id="subcategory_cancel" >cancel</button></td>
+                    <th valign="top"><button class="btn btn-primary" >Add Photo</button></th>
+                    <td> <button class="btn btn-primary" id="subcategory_cancel"  style="margin-left:5%;">cancel</button></td>
 
                 </tr>
 

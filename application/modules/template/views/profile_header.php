@@ -14,6 +14,7 @@
             <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.jcarousel.min.js"></script>
             <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/skin.css">
                 <script type="text/javascript" src="<?php echo base_url(); ?>js/photo.js"></script>
+                <script type="text/javascript" src="<?php echo base_url(); ?>js/user.js"></script>
                 <script type="text/javascript">
                     function get_base_url() {
                         return '<?php echo base_url(); ?>';

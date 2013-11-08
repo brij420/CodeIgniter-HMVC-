@@ -11,7 +11,7 @@ echo Modules::run('template/leftsidepanel');
 </div>
 <div class="modal-body" style="min-height:1000px;margin-left: 30%;">
     <a href=""><?php echo $image_info['category_name']; ?></a> >> <a href=""><?php echo $image_info['sub_category_name']; ?></a>
-    <div class="comment-wrap"> <img src="<?php echo base_url() . 'images/' . $image_info['image']; ?>" /><br/><br/><br/>
+    <div class="comment-wrap"> <img src="<?php echo base_url() . 'uploads/' . $image_info['image']; ?>" /><br/><br/><br/>
 
         <?php
         $comments = array();

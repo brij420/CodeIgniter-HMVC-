@@ -98,7 +98,7 @@ class User extends MX_Controller {
 
     public function upload_file() {
         $this->load->model('user_model');
-        $uploaddir = './uploads/';
+        $uploaddir = './images/';
         $file = $uploaddir . basename($_FILES['uploadfile']['name']);
 
         if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $file)) {

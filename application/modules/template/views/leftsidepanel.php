@@ -9,7 +9,7 @@
 
             <a href="<?php echo base_url(); ?>index.php/profile/index"> <h2>Profile</h2></a>
         <?php } ?>
-        <h2>Categories</h2>
+        <h2>Tournaments</h2>
         <?php echo Modules::run('category/index'); ?>
     </div>
 </div>

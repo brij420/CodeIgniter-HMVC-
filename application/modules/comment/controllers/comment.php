@@ -30,6 +30,11 @@ class Comment extends MX_Controller {
         return $this->comment_model->get_all_comments($id);
     }
 
+    public function image_comments_count($id = NULL) {
+        $this->load->model('likes_model');
+        return $this->likes_model->get_comment_count($id);
+    }
+
 }
 
 /* End of file hmvc.php */

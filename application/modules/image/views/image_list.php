@@ -1,4 +1,4 @@
-<?php echo Modules::run('template/admin_header', array('subcategory' => 'current')); ?>
+<?php echo Modules::run('template/admin_header', array('images' => 'current')); ?>
 
 
 <!-- start content -->
@@ -6,7 +6,11 @@
 
     <!--  start page-heading -->
     <div id="page-heading">
-        <h1>Tournament List</h1><a href="<?php echo base_url(); ?>index.php/category/add_subcategory" title="Add" ><button class="btn btn-primary" style="margin-left: 80%;">Add Tournament</button></a>
+        <h1>Image List</h1><select id='tournaments' name='tournaments' style="margin-left: 80%;"><option value='' selected='selected'>select images</option>
+            <?php foreach ($tournaments as $value) { ?>
+                <option value='<?php if (isset($value['id']) && ($value['id'])) echo $value['id']; ?>'><?php if (isset($value['subcategory_name']) && ($value['subcategory_name'])) echo $value['subcategory_name']; ?></option>
+            <?php }
+            ?></select>
     </div>
     <!-- end page-heading -->
 
@@ -35,28 +39,16 @@
                                 <tr>
 
                                     <th class="table-header-repeat line-left minwidth-1"><a href="">S.No.</a>	</th>
-                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Category Name</a></th>
-                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Tournament Name</a></th>
-                                    <th class="table-header-repeat line-left"><a href="">Date</a></th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">User Name</a>	</th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Images</a></th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">is Winner</a></th>
+
                                     <th class="table-header-options line-left"><a href="">Options</a></th>
-                                </tr>
-                                <?php for ($i = 0; $i < count($subcategory_listing); $i++) { ?>
-                                    <tr>
+                                </tr><tr>
+                                    <td colspan='5'>
 
-                                        <td><?php echo $i + 1; ?></td>
-                                        <td><?php echo $subcategory_listing[$i]['category_name']; ?></td>
-                                        <td><?php echo $subcategory_listing[$i]['subcategory_name']; ?></td>
-                                        <td><a href=""><?php echo date('Y-m-d', $subcategory_listing[$i]['date']); ?></a></td>
-
-                                        <td class="options-width">
-                                            <a href="<?php echo base_url(); ?>index.php/category/add_subcategory" title="Add" class="icon-1 info-tooltip"></a>
-                                            <a href="<?php echo base_url(); ?>index.php/category/edit_subcategory?id=<?php echo $subcategory_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
-                                            <a href="<?php echo base_url(); ?>index.php/category/delete_subcategory?id=<?php echo $subcategory_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                              
-                                        </td>
-                                    </tr>
-                                <?php } ?>
-
-                            </table>
+                                        <h3 style='text-align: center;background-color:grey;'>Please select the Tournament!</h3>
+                                    </td></tr></table>
                             <!--  end product-table................................... --> 
                         </form>
                     </div>

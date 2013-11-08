@@ -15,9 +15,24 @@ $(document).ready(function() {
     $('#category_err').hide();
     $('#subcategory_err').text("");
     $('#select_category_err').text("");
-    category_list();
+    $('#description_err').text("");
+    $('#fees_err').text("");
+    $('#start_date_err').text("");
+    $('#start_vote_date_err').text("");
+    $('#end_date_err').text("");
+    $('#start_hour_err').text("");
+    $('#end_hour_err').text("");
 
-    file_upload();
+    $('#fprize_err').text("");
+    $('#sprize_err').text("");
+    $('#tprize_err').text("");
+    $('#four_prize_err').text("");
+    $('#fifth_prize_err').text("");
+    $('#six_prize_err').text("");
+    $('#seven_prize_err').text("");
+    $('#eight_prize_err').text("");
+
+
 
     $('#registration').submit(function(e) {
         e.preventDefault();
@@ -100,48 +115,133 @@ $(document).ready(function() {
     });
 
     $('#add_images').submit(function(e) {
+        is_user_signin();
         e.preventDefault();
-        if (($('#select_category').val() == '') || ($('#select_category').val() == 'select'))
-            $('#select_category_err').text("Please enter valid category!");
-        else
-            $('select_category_err').text("");
-
-        if (($('#select_subcategory').val() == '') || ($('#select_subcategory').val() == 'select'))
-            $('#select_subcategory_err').text("Please enter valid subcategory!");
-        else
-            $('select_subcategory_err').text("");
-
 
 
 //alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
-        if ((($('#select_category').val() != '') || ($('#select_category').val() != 'select')) && (($('#select_subcategory').val() != '') || ($('#select_subcategory').val() != 'select'))) {
 
-            $.ajax({
-                url: get_base_url() + 'index.php/image/add_image',
-                type: "POST",
-                dataType: "json",
-                data: {image: {
-                        select_category: $('#select_category').val(),
-                        select_subcategory: $('#select_subcategory').val(),
-                        image_name: $('#image_name').val()
-                    }
-                },
-                success: function(data) {
 
-                    if (data.saveImage.successCode == "000") {
-                       // window.location.href = get_base_url() + 'index.php/profile/index';
-                        return false;
+        $.ajax({
+            url: get_base_url() + 'index.php/image/add_profile_image',
+            type: "POST",
+            dataType: "json",
+            data: {profile_image: {
+                    image_name: $('#image_name').val()
+                }
+            },
+            success: function(data) {
+
+                if (data.saveImage.successCode == "000") {
+                    window.location.href = get_base_url() + 'index.php/profile/index';
+                    return false;
+                }
+
+                if (data.saveImage.successCode != "000") {
+                    $('#msg').html(data.addUser.successMessage);
+                    return false;
+                }
+
+            }
+        });
+        return false;
+
+
+    });
+    $('#tournaments').click(function(e) {
+        is_admin_signin();
+        e.preventDefault();
+
+
+//alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
+
+
+        $.ajax({
+            url: get_base_url() + 'index.php/image/get_tournament_images?id=' + $('#tournaments').val(),
+            type: "POST",
+            dataType: "json",
+            success: function(data) {
+                var str = '';
+                var is_data = '';
+                if (data.imageList.successCode == "000") {
+                    str = '<table border="0" width="100%" cellpadding="0" cellspacing="0" id="product-table">';
+                    str += '<tr>';
+
+                    str += '<th class="table-header-repeat line-left minwidth-1"><a href="">S.No.</a>	</th>';
+                    str += '<th class="table-header-repeat line-left minwidth-1"><a href="">User Name</a>	</th>';
+                    str += '<th class="table-header-repeat line-left minwidth-1"><a href="">Images</a></th>';
+                    str += '<th class="table-header-repeat line-left minwidth-1"><a href="">is Winner</a></th>';
+                    // str += '<th class="table-header-repeat line-left"><a href="">Date</a></th>';
+                    str += '<th class="table-header-options line-left"><a href="">Options</a></th>';
+                    str += '</tr>';
+
+
+                    for (var i = 0; i < data.imageList.images.length; i++) {
+                        is_data++;
+                        str += "<tr id='images'>";
+
+                        str += '<td>' + (i + 1) + '</td>';
+                        str += '<td>' + data.imageList.images[i].userName + '</td>';
+                        str += '<td><img src="' + get_base_url() + 'uploads/' + data.imageList.images[i].image + '" height="100" width="100" /></td>';
+                        if (data.imageList.images[i].is_winner)
+                            str += '<td> Yes </td>';
+                        else
+                            str += '<td> No </td>';
+
+                        str += '<td class="options-width">';
+                        str += '<a href="' + get_base_url() + 'index.php/image/delete_tournament_image?id=' + data.imageList.images[i].id + '" title="Delete" class="icon-2 info-tooltip"></a>';
+                        str += '<a href="' + get_base_url() + 'index.php/category/winner?image_id=' + data.imageList.images[i].id + '&user_id=' + data.imageList.images[i].user_id + '&sub_cat_id=' + data.imageList.images[i].sub_cat_id + '" title="Winner" class="icon-4 info-tooltip"></a>';
+                        // str+='<a href="'+get_base_url()+'"index.php/category/add_subcategory" title="Add" class="icon-1 info-tooltip"></a>';
+                        //str+='<a href="'+get_base_url()+'"index.php/category/add_subcategory" title="Add" class="icon-1 info-tooltip"></a>';
+                        str += '</td>';
+                        str += '</tr>';
                     }
 
-                    if (data.saveImage.successCode != "000") {
-                        $('#msg').html(data.addUser.successMessage);
-                        return false;
-                    }
+                    str += '</table>';
+                    if ((str != '') && (is_data))
+                        $('#mainform').html(str);
+
 
                 }
-            });
-            return false;
-        }
+                if (is_data == '')
+                    $('#mainform').html("<h3 style='text-align: center;background-color:grey;'>No image uploaded!</h3>");
+                return false;
+
+
+            }
+        });
+        return false;
+
+
+    });
+    $('#add_images_tournament').submit(function(e) {
+        is_user_signin();
+        e.preventDefault();
+
+        $.ajax({
+            url: get_base_url() + 'index.php/image/add_photo_tournament',
+            type: "POST",
+            dataType: "json",
+            data: {image: {
+                    select_subcategory: $('#subcategory').val(),
+                    select_category: $('#category').val(),
+                    image_name: $('#image_name').val()
+                }
+            },
+            success: function(data) {
+
+                if (data.saveImage.successCode == "000") {
+                    window.location.href = get_base_url() + 'index.php/category/subcategory?id=' + $('#subcategory').val();
+                    return false;
+                }
+
+                if (data.saveImage.successCode != "000") {
+                    $('#msg').html(data.addUser.successMessage);
+                    return false;
+                }
+
+            }
+        });
         return false;
 
     });
@@ -407,17 +507,133 @@ $(document).ready(function() {
         else
             $('#select_category_err').text("");
 
+        if (($('#description').val() == ''))
+            $('#description_err').text("Please enter description!");
+        else
+            $('#description_err').text("");
+
+        if (($('#fees').val() == '') || (!isNumeric($('#fees').val())))
+            $('#fees_err').text("Please enter tournament fees!");
+        else
+            $('#fees_err').text("");
+
+        if (($('#start_date').val() == ''))
+            $('#start_date_err').text("Please enter start date!");
+        else
+            $('#start_date_err').text("");
+        
+         if (($('#start_vote_date').val() == ''))
+            $('#start_vote_date_err').text("Please enter start vote date!");
+        else
+            $('#start_vote_date_err').text("");
+
+        if (($('#end_date').val() == ''))
+            $('#end_date_err').text("Please enter end date!");
+        else
+            $('#end_date_err').text("");
+
+        if (($('#start_hour').val() == ''))
+            $('#start_hour_err').text("Please enter start hour!");
+        else
+            $('#start_hour_err').text("");
+
+        if (($('#end_hour').val() == ''))
+            $('#end_hour_err').text("Please enter end hour!");
+        else
+            $('#end_hour_err').text("");
 
 
+        if (($('#fprize').val() != '')) {
+            if ((!isNumeric($('#fprize').val()))) {
+                $('#fprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#fprize_err').text("");
+            }
+        }
+        if (($('#sprize').val() != '')) {
+            if ((!isNumeric($('#sprize').val()))) {
+                $('#sprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#sprize_err').text("");
+            }
+        }
+        if (($('#tprize').val() != '')) {
+
+            if ((!isNumeric($('#tprize').val()))) {
+                $('#tprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#tprize_err').text("");
+            }
+        }
+        if (($('#four_prize').val() != '')) {
+            if ((!isNumeric($('#four_prize').val()))) {
+                $('#four_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#four_prize_err').text("");
+            }
+        }
+        if (($('#fifth_prize').val() != '')) {
+            if ((!isNumeric($('#fifth_prize').val()))) {
+                $('#fifth_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#fifth_prize_err').text("");
+            }
+        }
+        if (($('#six_prize').val() != '')) {
+            if ((!isNumeric($('#six_prize').val()))) {
+                $('#six_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#six_prize_err').text("");
+            }
+        }
+        if (($('#seven_prize').val() != '')) {
+            if ((!isNumeric($('#seven_prize').val()))) {
+                $('#seven_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#seven_prize_err').text("");
+            }
+        }
+        if (($('#eight_prize').val() != '')) {
+            if ((!isNumeric($('#eight_prize').val()))) {
+                $('#eight_prize_err').text("Please enter digit's only!");
+                return false;
+            }
+            else {
+                $('#eight_prize_err').text("");
+            }
+
+        }
 //alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
-        if ((isAlphanumericCharachter($('#subcategory').val())) && (isNumeric($('#select_category').val()))) {
+        if ((isAlphanumericCharachter($('#subcategory').val())) && (isNumeric($('#select_category').val())) && ($('#description').val() != '') && ($('#start_hour').val()) && ($('#end_hour').val())) {
             $.ajax({
                 url: get_base_url() + 'index.php/category/add_subcategory',
                 type: "POST",
                 dataType: "json",
                 data: {subcategory: {
                         select_category: $('#select_category').val(),
-                        subcategory: $('#subcategory').val()
+                        subcategory: $('#subcategory').val(),
+                        description: $('#description').val(),
+                        fees: $('#fees').val(),
+                        start_date: $('#start_date').val(),
+                        start_vote_date:$('#start_vote_date').val(),
+                        end_date: $('#end_date').val(),
+                        start_hour: $('#start_hour').val(),
+                        end_hour: $('#end_hour').val(),
+                        fprize: $('#fprize').val(),
+                        sprize: $('#sprize').val(),
+                        tprize: $('#tprize').val(),
+                        four_prize: $('#four_prize').val(),
+                        fifth_prize: $('#fifth_prize').val(),
+                        six_prize: $('#six_prize').val(),
+                        seven_prize: $('#seven_prize').val(),
+                        eight_prize: $('#eight_prize').val()
                     }
                 },
                 success: function(data) {
@@ -453,10 +669,127 @@ $(document).ready(function() {
         else
             $('#select_category_err').text("");
 
+        if (($('#description').val() == ''))
+            $('#description_err').text("Please enter description!");
+        else
+            $('#description_err').text("");
+
+        if (($('#fees').val() == '') || (!isNumeric($('#fees').val())))
+            $('#fees_err').text("Please enter tournament fees!");
+        else
+            $('#fees_err').text("");
+
+        if (($('#start_date').val() == ''))
+            $('#start_date_err').text("Please enter start date!");
+        else
+            $('#start_date_err').text("");
+        
+        if (($('#start_vote_date').val() == ''))
+            $('#start_vote_date_err').text("Please enter start vote date!");
+        else
+            $('#start_vote_date_err').text("");
+
+        if (($('#end_date').val() == ''))
+            $('#end_date_err').text("Please enter end date!");
+        else
+            $('#end_date_err').text("");
+
+        if (($('#start_hour').val() == ''))
+            $('#start_hour_err').text("Please enter start hour!");
+        else
+            $('#start_hour_err').text("");
+
+        if (($('#end_hour').val() == ''))
+            $('#end_hour_err').text("Please enter end hour!");
+        else
+            $('#end_hour_err').text("");
+
+        if (($('#fees').val() == '') || (!isNumeric($('#fees').val())))
+            $('#fees_err').text("Please enter tournament fees!");
+        else
+            $('#fees_err').text("");
+
+        if (($('#start_date').val() == ''))
+            $('#start_date_err').text("Please enter start date!");
+        else
+            $('#start_date_err').text("");
+
+        if (($('#end_date').val() == '')) {
+            $('#end_date_err').text("Please enter end date!");
+        } else {
+            $('#end_date_err').text("");
+        }
 
 
+        if (($('#fprize').val() != '')) {
+            if ((!isNumeric($('#fprize').val()))) {
+                $('#fprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#fprize_err').text("");
+            }
+        }
+        if (($('#sprize').val() != '')) {
+            if ((!isNumeric($('#sprize').val()))) {
+                $('#sprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#sprize_err').text("");
+            }
+        }
+        if (($('#tprize').val() != '')) {
+
+            if ((!isNumeric($('#tprize').val()))) {
+                $('#tprize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#tprize_err').text("");
+            }
+        }
+        if (($('#four_prize').val() != '')) {
+            if ((!isNumeric($('#four_prize').val()))) {
+                $('#four_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#four_prize_err').text("");
+            }
+        }
+        if (($('#fifth_prize').val() != '')) {
+            if ((!isNumeric($('#fifth_prize').val()))) {
+                $('#fifth_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#fifth_prize_err').text("");
+            }
+        }
+        if (($('#six_prize').val() != '')) {
+            if ((!isNumeric($('#six_prize').val()))) {
+                $('#six_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#six_prize_err').text("");
+            }
+        }
+        if (($('#seven_prize').val() != '')) {
+            if ((!isNumeric($('#seven_prize').val()))) {
+                $('#seven_prize_err').text("Please enter digit's only!");
+                return false;
+            } else {
+                $('#seven_prize_err').text("");
+            }
+        }
+        if (($('#eight_prize').val() != '')) {
+            if ((!isNumeric($('#eight_prize').val()))) {
+                $('#eight_prize_err').text("Please enter digit's only!");
+                return false;
+            }
+            else {
+                $('#eight_prize_err').text("");
+            }
+
+        }
 //alert((isAlphanumericCharachter($('#username').val())) +' '+ (isAlphanumericCharachter($('#fname').val()))  +' '+   (isAlphanumericCharachter($('#lname').val())  +' '+ (isEmail($('#email').val())))  +' '+  ($('#password').val() == $('#confirm_password').val())  +' '+  (($('#password').val()).length >= 8));
-        if ((isAlphanumericCharachter($('#subcategory').val())) && (isNumeric($('#select_category').val()))) {
+        if ((isAlphanumericCharachter($('#subcategory').val())) && (isNumeric($('#select_category').val())) && ($('#description').val() != '') && ($('#start_hour').val()) && ($('#end_hour').val())) {
             $.ajax({
                 url: get_base_url() + 'index.php/category/edit_subcategory',
                 type: "POST",
@@ -464,6 +797,21 @@ $(document).ready(function() {
                 data: {subcategory: {
                         select_category: $('#select_category').val(),
                         subcategory: $('#subcategory').val(),
+                        description: $('#description').val(),
+                        fees: $('#fees').val(),
+                        start_date: $('#start_date').val(),
+                        start_vote_date:$('#start_vote_date').val(),
+                        end_date: $('#end_date').val(),
+                        start_hour: $('#start_hour').val(),
+                        end_hour: $('#end_hour').val(),
+                        fprize: $('#fprize').val(),
+                        sprize: $('#sprize').val(),
+                        tprize: $('#tprize').val(),
+                        four_prize: $('#four_prize').val(),
+                        fifth_prize: $('#fifth_prize').val(),
+                        six_prize: $('#six_prize').val(),
+                        seven_prize: $('#seven_prize').val(),
+                        eight_prize: $('#eight_prize').val(),
                         id: $('#id').val()
                     }
                 },
@@ -510,34 +858,7 @@ $(document).ready(function() {
         return false;
     });
 
-    function category_list() {
-        //is_admin_signin();
-        $('#select_category').empty();
-        $.ajax({
-            url: get_base_url() + 'index.php/category/get_parent_category',
-            type: "POST",
-            dataType: "json",
-            success: function(data) {
 
-                var str = '';
-
-                if ($('#cat_id').val())
-                    str += '<option value="select" >select</option>';
-                else
-                    str += '<option value="select" select= "select" >select</option>';
-                for (var i = 0; i < data.category.length; i++) {
-                    if ($('#cat_id').val() == data.category[i].id)
-                        str += '<option value="' + data.category[i].id + '" selected= "selected">' + data.category[i].name + '</option>';
-                    else
-                        str += '<option value="' + data.category[i].id + '">' + data.category[i].name + '</option>';
-                }
-                $('#select_category').html(str);
-            }
-        });
-        return false;
-
-
-    }
     $('#signin').submit(function(e) {
         e.preventDefault();
         if (($('#username').val() == '') || (!isAlphanumericCharachter($('#username').val())))
@@ -811,83 +1132,19 @@ function is_user_signin() {
 function is_admin_signin() {
     $(document).ready(function() {
         $.ajax({
-            url: get_base_url() + 'index.php/user/isadmin_signin',
+            url: get_base_url() + 'index.php/administrator/isadmin_signin',
             type: "POST",
             dataType: "json",
             success: function(data) {
-                if (data.isSignin.successCode != "000") {
-                    alert(data.isSignin.successMessage);
+                if (data.isAdminSignin.successCode != "000") {
+                    alert(data.isAdminSignin.successMessage);
                     window.location.href = get_base_url() + 'index.php/administrator/index';
                     return false;
                 }
-
+                return false;
             }
         });
     });
-
+    return false;
 }
 
-
-function file_upload() {
-
-    $(function() {
-        var btnUpload = $('#upload');
-        var status = $('#status');
-        new AjaxUpload(btnUpload, {
-            action: get_base_url() + 'index.php/user/upload_file',
-            name: 'uploadfile',
-            onSubmit: function(file, ext) {
-                if (!(ext && /^(jpg|png|jpeg|gif)$/.test(ext))) {
-                    // extension is not allowed 
-                    status.text('Only JPG, PNG or GIF files are allowed');
-                    return false;
-                }
-                status.text('Uploading...');
-            },
-            onComplete: function(file) {
-
-                if (file != '') {
-                    $('#image_name').val($('#image_name').val() + ',' + file);
-                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="' + get_base_url() + 'uploads/' + file + '" alt="" /><br />').addClass('success');
-                } else {
-                    $('<li></li>').appendTo('#files').text(file).addClass('error');
-                }
-            }
-        });
-
-    });
-
-}
-
-
-
-function image_upload() {
-
-    $(function() {
-        var btnUpload = $('#upload');
-        var status = $('#status');
-        new AjaxUpload(btnUpload, {
-            action: get_base_url() + 'index.php/image/upload_file',
-            name: 'uploadfile',
-            onSubmit: function(file, ext) {
-                if (!(ext && /^(jpg|png|jpeg|gif)$/.test(ext))) {
-                    // extension is not allowed 
-                    status.text('Only JPG, PNG or GIF files are allowed');
-                    return false;
-                }
-                status.text('Uploading...');
-            },
-            onComplete: function(file) {
-
-                if (file != '') {
-                    $('#image_name').val($('#image_name').val() + ',' + file);
-                    $('<li></li>').appendTo('#files').html('<img style="width:100px;height:100px;" src="' + get_base_url() + 'uploads/' + file + '" alt="" /><br />').addClass('success');
-                } else {
-                    $('<li></li>').appendTo('#files').text(file).addClass('error');
-                }
-            }
-        });
-
-    });
-
-}

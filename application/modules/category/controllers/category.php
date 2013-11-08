@@ -165,6 +165,46 @@ class Category extends MX_Controller {
         redirect('category/subcategory_list');
     }
 
+    public function get_turnament_list() {
+        $this->load->model('category_model');
+        return $this->category_model->get_subcategory();
+    }
+
+    public function subcategory() {
+        $data = array();
+        $id = NULL;
+        $id = $this->input->get('id', TRUE);
+        $this->load->model('category_model');
+
+        if ((!empty($data))) {
+
+            echo json_encode(array('tournaments' => array('successCode' => '000', 'successMessage' => 'subcategory updated successfully!')));
+            exit();
+        }
+        return $this->load->view('tournaments', array('tournaments' => $this->category_model->get_tournament_info($id), 'images' => $this->category_model->get_tournament_photos($id)));
+    }
+
+    public function winner() {
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && (!$userinfo['id'])) {
+            redirect('user/index');
+        }
+        $this->load->model('category_model');
+        if ($this->category_model->duplicate_winner_check($this->input->get('user_id', TRUE), $this->input->get('image_id', TRUE), $this->input->get('sub_cat_id', TRUE)))
+            $this->category_model->save_winner($this->input->get('user_id', TRUE), $this->input->get('image_id', TRUE), $this->input->get('sub_cat_id', TRUE));
+        redirect('image/images');
+    }
+
+    public function join_tournament() {
+        $userinfo = $this->session->userdata('userinfo');
+        if (isset($userinfo['id']) && (!$userinfo['id'])) {
+            redirect('user/index');
+        }
+        $this->load->model('category_model');
+        $this->category_model->join_tournament($this->input->get('id', TRUE), $userinfo['id']);
+        redirect('category/subcategory?id=' . $this->input->get('id', TRUE));
+    }
+
 }
 
 /* End of file hmvc.php */

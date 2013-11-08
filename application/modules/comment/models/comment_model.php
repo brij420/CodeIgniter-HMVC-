@@ -20,10 +20,16 @@ class Comment_model extends CI_Model {
         return $this->db->insert('comment', $comment_data);
     }
 
-    function get_all_comments($id) {
+    function get_all_comments($id=NULL) {
         $row = $this->db->query("SELECT comment.*,user_account.username FROM comment LEFT JOIN user_account ON(comment.user_id=user_account.id) WHERE photo_id='" . $id . "'");
         $result = $row->result_array();
         return $result;
+    }
+
+    function get_comment_count($id=NULL) {
+        $row = $this->db->query("SELECT COUNT(*) FROM comment WHERE photo_id='".$id."'");
+        $result = $row->result_array();
+        return isset($result[0]['COUNT(*)'])&&($result[0]['COUNT(*)'])?$result[0]['COUNT(*)']:NULL;
     }
 
     function get_sub_category() {
@@ -31,8 +37,6 @@ class Comment_model extends CI_Model {
         $result = $row->result_array();
         return $result;
     }
-
-    
 
 }
 

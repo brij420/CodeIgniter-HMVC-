@@ -50,7 +50,7 @@ class Administrator_model extends CI_Model {
     }
 
     function authentication($data = array()) {
-        $row = $this->db->query("SELECT COUNT(*) FROM user_account WHERE username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "'");
+        $row = $this->db->query("SELECT COUNT(*) FROM user_account WHERE username='" . $data['username'] . "' AND  password='" . md5($data['password']) . "' AND is_admin='1'");
         $result = $row->result_array();
         if (isset($result[0]['COUNT(*)']) && ($result[0]['COUNT(*)'])) {
             return true;

@@ -9,15 +9,21 @@
         <link class="cssdeck" rel="stylesheet" href="<?php echo base_url(); ?>css/bootstrap.min.css">
             <link rel="stylesheet" href="<?php echo base_url(); ?>css/bootstrap-responsive.min.css" class="cssdeck"></link>
             <link rel="stylesheet" href="<?php echo base_url(); ?>css/style.css" class="cssdeck"></link>
-            <script src="<?php echo base_url(); ?>js/jquery-1.9.1.min.js" type="text/javascript"></script>
+            <link rel="stylesheet" href="<?php echo base_url(); ?>css/jquery-ui.css" />
+            <script src="<?php echo base_url(); ?>js/jquery-1.9.1.js"></script>
+            <script src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
+
             <script src="<?php echo base_url(); ?>js/jquery/date.js" type="text/javascript"></script>
             <script src="<?php echo base_url(); ?>js/jquery/jquery.datePicker.js" type="text/javascript"></script>
+            <script type="text/javascript" src="<?php echo base_url(); ?>js/ajaxupload.3.5.js"></script>
             <script src="<?php echo base_url(); ?>js/global.js" type="text/javascript"></script>
+            <script src="<?php echo base_url(); ?>js/admin.js" type="text/javascript"></script>
             <script type="text/javascript">
                 function get_base_url() {
                     return '<?php echo base_url(); ?>';
                 }
             </script>
+
 
 
     </head>
@@ -50,7 +56,7 @@
 
                     <div class="nav-divider">&nbsp;</div>
 
-                    <a href="<?php echo base_url();?>index.php/administrator/logout" id="logout"><img src="<?php echo base_url(); ?>images/shared/nav/nav_logout.gif" width="64" height="14" alt="" /></a>
+                    <a href="<?php echo base_url(); ?>index.php/administrator/logout" id="logout"><img src="<?php echo base_url(); ?>images/shared/nav/nav_logout.gif" width="64" height="14" alt="" /></a>
                     <div class="clear">&nbsp;</div>
 
 
@@ -63,14 +69,24 @@
                 <div class="nav">
                     <div class="table">
 
-                        <ul class="<?php if(isset($admin) && ($admin))echo $admin; else echo 'select'?>" ><li><a href="<?php echo base_url();?>index.php/administrator/administrator/user_list"><b>User's List</b><!--[if IE 7]><!--></a><!--<![endif]-->
+                        <ul class="<?php
+                        if (isset($admin) && ($admin))
+                            echo $admin;
+                        else
+                            echo 'select'
+                            ?>" ><li><a href="<?php echo base_url(); ?>index.php/administrator/administrator/user_list"><b>User's List</b><!--[if IE 7]><!--></a><!--<![endif]-->
 
                             </li>
                         </ul>
 
                         <div class="nav-divider">&nbsp;</div>
 
-                        <ul class="<?php if(isset($category) &&($category))echo $category; else echo 'select'?>" ><li><a href="<?php echo base_url();?>index.php/category/category/category_list"><b>Categories</b><!--[if IE 7]><!--></a><!--<![endif]-->
+                        <ul class="<?php
+                        if (isset($category) && ($category))
+                            echo $category;
+                        else
+                            echo 'select'
+                            ?>" ><li><a href="<?php echo base_url(); ?>index.php/category/category/category_list"><b>Categories</b><!--[if IE 7]><!--></a><!--<![endif]-->
 
                             </li>
                         </ul>
@@ -79,7 +95,25 @@
 
                         <div class="nav-divider">&nbsp;</div>
 
-                        <ul class="<?php if(isset($subcategory) &&($subcategory))echo $subcategory; else echo 'select'?>" ><li><a href="<?php echo base_url();?>index.php/category/category/subcategory_list"><b>SubCategories</b><!--[if IE 7]><!--></a><!--<![endif]-->
+                        <ul class="<?php
+                        if (isset($subcategory) && ($subcategory))
+                            echo $subcategory;
+                        else
+                            echo 'select'
+                            ?>" ><li><a href="<?php echo base_url(); ?>index.php/category/category/subcategory_list"><b>Tournaments</b><!--[if IE 7]><!--></a><!--<![endif]-->
+
+                            </li>
+                        </ul>
+
+                        <div class="nav-divider">&nbsp;</div>
+                        
+
+                        <ul class="<?php
+                        if (isset($images) && ($images))
+                            echo $images;
+                        else
+                            echo 'select'
+                            ?>" ><li><a href="<?php echo base_url(); ?>index.php/image/image/images"><b>Images</b><!--[if IE 7]><!--></a><!--<![endif]-->
 
                             </li>
                         </ul>

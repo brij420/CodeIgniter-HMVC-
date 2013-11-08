@@ -1,10 +1,10 @@
-<?php echo Modules::run('template/admin_header',array('category'=>'current')); ?>
+<?php echo Modules::run('template/admin_header', array('category' => 'current')); ?>
 <!-- start content -->
 <div id="content">
 
     <!--  start page-heading -->
     <div id="page-heading">
-        <h1>Category List</h1>
+        <h1>Category List</h1> <a href="<?php echo base_url(); ?>index.php/category/add_category" title="Add" ><button class="btn btn-primary" style="margin-left: 80%;">Add Category</button></a>
     </div>
     <!-- end page-heading -->
 
@@ -33,7 +33,7 @@
                                 <tr>
 
                                     <th class="table-header-repeat line-left minwidth-1"><a href="">S.No.</a>	</th>
-                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Category Name</a></th>
+                                    <th class="table-header-repeat line-left minwidth-1"><a href="">Tournament Name</a></th>
                                     <th class="table-header-repeat line-left"><a href="">Date</a></th>
                                     <th class="table-header-options line-left"><a href="">Options</a></th>
                                 </tr>
@@ -45,9 +45,9 @@
                                         <td><a href=""><?php echo date('Y-m-d', $category_listing[$i]['date']); ?></a></td>
 
                                         <td class="options-width">
-                                            <a href="<?php echo base_url();?>index.php/category/add_category" title="Add" class="icon-1 info-tooltip"></a>
-                                            <a href="<?php echo base_url();?>index.php/category/edit_category?id=<?php echo $category_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
-                                            <a href="<?php echo base_url();?>index.php/category/delete_category?id=<?php echo $category_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                                        
+                                            <a href="<?php echo base_url(); ?>index.php/category/add_category" title="Add" class="icon-1 info-tooltip"></a>
+                                            <a href="<?php echo base_url(); ?>index.php/category/edit_category?id=<?php echo $category_listing[$i]['id']; ?>" title="Edit" class="icon-3 info-tooltip"></a>
+                                            <a href="<?php echo base_url(); ?>index.php/category/delete_category?id=<?php echo $category_listing[$i]['id']; ?>" title="Delete" class="icon-2 info-tooltip"></a>                                                        
                                         </td>
                                     </tr>
                                 <?php } ?>
